@@ -1,4 +1,18 @@
+using SAMLHost;
+using SAMLHost.Services;
+
 var builder = WebApplication.CreateBuilder(args);
+
+if (builder.Environment.IsDevelopment())
+{
+    builder.Configuration.AddUserSecrets<Program>();
+}
+
+builder.BindOptions<SamlIdentityProviderOptions>("SAMLIdentityProvider");
+builder.BindOptions<SamlServiceProviderOptions>("SAMLServiceProvider");
+
+builder.Services.AddSingleton<UserService>();
+builder.Services.AddScoped<SamlService>();
 
 // Add services to the container.
 builder.Services.AddRazorPages();
@@ -20,6 +34,7 @@ app.UseRouting();
 
 app.UseAuthorization();
 
+app.MapControllers();
 app.MapRazorPages();
 
 app.Run();
